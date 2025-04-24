@@ -13,6 +13,15 @@ x1 = 0
 x2 =650
 y1 =0
 y2 =0
+BLACK = (0,0,0)
+
+font.init()
+font = font.SysFont('arial', 50)
+lose_left = font.render('ПОРОЖЕНИЕ ЛЕВОГО', True, BLACK)
+lose_right = font.render('ПОРОЖЕНИЕ ПРАВОГО', True, BLACK)
+
+# ...
+
 
 speed = 5
 FPS = 60
@@ -77,19 +86,48 @@ b = Player('chill_gay_vlevo.png', x2,y2, width, size)
 ball =Ball('бабуз.png', WIN_W/2, WIN_H/2, size, size)
 # игровой цикл
 game = True
+finish = False
 while game:
-    background.draw(window)
-    a.draw(window)
-    b.draw(window)
-    ball.draw(window)
-    a.update(K_w, K_s)
-    b.update(K_UP, K_DOWN)
-    ball.update()
-    if sprite.collide_rect(ball, a) or sprite.collide_rect(ball, b):
-            ball.speed_x *= -1
+   
+        
     for e in event.get():
         # выйти, если нажат "крестик"
         if e.type == QUIT:
             game = False
+
+    
+    if not finish:
+        background.draw(window)
+        a.draw(window)
+        b.draw(window)
+        ball.draw(window)
+        a.update(K_w, K_s)
+        b.update(K_UP, K_DOWN)
+        ball.update()
+        if ball.rect.x <=0:
+            finish = True
+            window.blit(lose_left, (100, 200))
+            display.update()
+
+        if ball.rect.x >=WIN_W - ball.rect.width:
+            finish = True
+            window.blit(lose_right, (100, 200))
+            display.update()
+        if ball.rect.x <=0:
+            finish = True
+
+        if ball.rect.x >=WIN_W - ball.rect.width:
+            finish = True
+
+        if sprite.collide_rect(ball, a) or sprite.collide_rect(ball, b):
+                ball.speed_x *= -1
+    else:
+        background = GameSprite('pole_chill_gey.jpg', 0,0, WIN_W, WIN_H)
+
+        a = Player('chill_gay_vpravo .png', x1,y1, width, size)
+        b = Player('chill_gay_vlevo.png', x2,y2, width, size)
+        ball =Ball('бабуз.png', WIN_W/2, WIN_H/2, size, size)
+        finish = False
+        
     display.update()
     clock.tick(FPS)
